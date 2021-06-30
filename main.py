@@ -7,6 +7,7 @@ grid = [
 ]
 
 
+# Function that prints the current grid
 def PrintGrid():
     print("\n\n")
     print(" | 1 | 2 | 3 |")
@@ -19,39 +20,47 @@ def PrintGrid():
     print("-|-----------|")
 
 
+# Function that contains the code for any player's move
 def humansMove(turn):
     validPlay = False
-    playMove = []
-    index = ""
+    letter = ""
+    number = ""
+    cordToInt = {"A": 0, "B": 3, "C": 6}
+
+    # Repeats until player enters a valid coordinate
     while not validPlay:
-        for char in input("Enter coordinate: "):
-            playMove.append(char)
+
+        # Split the coordinate
+        inputStr = input("Enter coordinate: ")
+        letter = inputStr[0]
+        number = int(inputStr[1])
             
-        
-        if "A" == playMove[0]:
-            index = int(playMove[1]) - 1
-            if grid[index] == " ":
-                grid[index] = turn
-                validPlay == True
-
-        elif "B" == playMove[0]:
-            index = int(playMove[1]) + 2
-            if grid[index] == " ":
-                grid[index] = turn
-                validPlay == True
-
-        elif "C" in playMove[0]:
-            index = int(playMove[1]) + 5
+        # Check if coordinates are valid
+        if "ABC" in letter and number <= 3:
+            index = cordToInt[letter] + number
             if grid[index] == " ":
                 grid[index] = turn
                 validPlay == True
 
 
+# Function that contains the code for any computer move
+def compMove(turn):
+    validComp = False
+
+    #Repeats until a valid coordinate is chosen
+    while not validComp:
+        compMove = random.randint(0, 8)
+        if grid[compMove] == " ":
+            grid[compMove] = turn
+            validComp = True
+
+
+# Checks if anyone has won
 def hasWon():
     possibleWins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
 
+    # Checks for all possible win combos
     try:
-        grid.index(" ")
         for set in possibleWins:
             if grid[set[0]] == grid[set[1]] == grid[set[2]] != " ":
                 print("Congratulations "+ grid[set[0]] + " wins!")
@@ -63,7 +72,10 @@ def hasWon():
 
                 else: 
                     exit()
+        grid.index(" ")
 
+
+    # If there are no empty spaces and no winners, ends the game
     except ValueError:
         print("Stalemate!")
         print("Do you want to play again (Y/N)? ")
@@ -76,45 +88,34 @@ def hasWon():
             exit()
 
 
-
-        
+# One player game       
 def OnePlayer(goesFirst):
     winner = False
 
     if goesFirst == "Y":
-        turn = "X"
+        comp = "O"
+        play = "X"
 
         while not winner:
             PrintGrid()
-            validComp = False
-            humansMove(turn)
+            humansMove(play)     
             hasWon()
 
-            while not validComp:
-                compMove = random.randint(0, 8)
-                if grid[compMove] == " ":
-                    grid[compMove] = "O"
-                    validComp = True
-    
+            compMove(comp)
             hasWon()
 
     else:
-        turn = "O"
+        comp = "X"
+        play = "O"
 
         while not winner:
             PrintGrid()
-            validComp = False
-
-            while not validComp:
-                compMove = random.randint(0, 8)
-                if grid[compMove] == " ":
-                    grid[compMove] = "X"
-                    validComp = True
+            compMove(comp)
 
             PrintGrid()
             hasWon()
 
-            humansMove(turn)
+            humansMove(play)
             hasWon()
 
 
@@ -148,7 +149,8 @@ def setup():
         OnePlayer(first)
     
     else:
-        playOneName = input("\nEnter Player One's Name: ")
+        print("\nNote: Player One will always go first")
+        playOneName = input("Enter Player One's Name: ")
         playTwoName = input("Enter Player Two's Name: ")
         TwoPlayers(playOneName, playTwoName)
 
