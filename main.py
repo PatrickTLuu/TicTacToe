@@ -17,7 +17,7 @@ def PrintGrid():
     print("B| " + grid[3] + " | " + grid[4] + " | " + grid[5] + " |")
     print("-|-----------|")
     print("C| " + grid[6] + " | " + grid[7] + " | " + grid[8] + " |")
-    print("-|-----------|")
+    print("-|-----------|\n\n")
 
 
 # Function that contains the code for any player's move
@@ -25,7 +25,7 @@ def humansMove(turn):
     validPlay = False
     letter = ""
     number = ""
-    cordToInt = {"A": 0, "B": 3, "C": 6}
+    cordToInt = {"A": -1, "B": 2, "C": 5}
 
     # Repeats until player enters a valid coordinate
     while not validPlay:
@@ -36,11 +36,11 @@ def humansMove(turn):
         number = int(inputStr[1])
             
         # Check if coordinates are valid
-        if "ABC" in letter and number <= 3:
+        if (letter in "ABC") and (number <= 3):
             index = cordToInt[letter] + number
             if grid[index] == " ":
                 grid[index] = turn
-                validPlay == True
+                validPlay = True
 
 
 # Function that contains the code for any computer move
@@ -63,7 +63,7 @@ def hasWon():
     try:
         for set in possibleWins:
             if grid[set[0]] == grid[set[1]] == grid[set[2]] != " ":
-                print("Congratulations "+ grid[set[0]] + " wins!")
+                print("\n\nCongratulations "+ grid[set[0]] + " wins!")
                 print("Do you want to play again (Y/N)? ")
                 replay = input(">>> ") == "Y"
 
@@ -77,7 +77,7 @@ def hasWon():
 
     # If there are no empty spaces and no winners, ends the game
     except ValueError:
-        print("Stalemate!")
+        print("\n\nStalemate!")
         print("Do you want to play again (Y/N)? ")
         replay = input(">>> ") == "Y"
 
@@ -101,6 +101,7 @@ def OnePlayer(goesFirst):
             humansMove(play)     
             hasWon()
 
+            PrintGrid()
             compMove(comp)
             hasWon()
 
@@ -124,6 +125,7 @@ def TwoPlayers(playOne, playTwo):
 
     while not winner:
         PrintGrid()
+        hasWon()
         print(playOne + "'s Turn")
         humansMove("X")
 
@@ -132,7 +134,6 @@ def TwoPlayers(playOne, playTwo):
 
         print("\n\n" + playTwo + "'s Turn")
         humansMove("O")
-        hasWon()
 
 
 def setup():
